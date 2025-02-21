@@ -1,5 +1,5 @@
+/// <reference types="vinxi/types/server" />
 import { getRouterManifest } from "@tanstack/start/router-manifest";
-// app/ssr.tsx
 import {
   createStartHandler,
   defaultStreamHandler,
