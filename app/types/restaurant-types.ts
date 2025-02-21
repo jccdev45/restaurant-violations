@@ -1,5 +1,5 @@
 // Base restaurant information
-export interface RestaurantInfo {
+export interface RestaurantBase {
   camis: string;
   dba: string;
   boro: string;
@@ -19,7 +19,7 @@ export interface RestaurantInfo {
 }
 
 // Inspection details
-interface InspectionDetails {
+export interface InspectionDetails {
   inspection_date: string;
   action?: string;
   critical_flag?: string;
@@ -42,23 +42,16 @@ export interface FullInspectionData extends InspectionDetails {
 }
 
 // Restaurant with all inspections
-export interface RestaurantWithInspections extends RestaurantInfo {
+export interface Restaurant extends RestaurantBase {
   inspections: FullInspectionData[];
 }
 
 // API response for list of restaurants
 export interface RestaurantListResponse {
-  restaurants: RestaurantInfo[];
-  // Add pagination info if applicable
+  restaurants: Restaurant[];
 }
 
 // API response for a single restaurant with all inspections
 export interface SingleRestaurantResponse {
-  restaurant: RestaurantWithInspections;
-}
-
-// API response for a single inspection
-export interface SingleInspectionResponse {
-  restaurant: RestaurantInfo;
-  inspection: FullInspectionData;
+  restaurant: Restaurant;
 }

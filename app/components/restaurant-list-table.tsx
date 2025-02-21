@@ -1,12 +1,12 @@
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import type { RestaurantInfo } from "@/types/restaurant-types";
+import type { Restaurant } from "@/types/restaurant-types";
 import { Link } from "@tanstack/react-router";
 import { MapPinIcon } from "lucide-react";
 
 interface RestaurantTableProps {
-  restaurants: RestaurantInfo[];
+  restaurants: Restaurant[];
 }
 
 export default function RestaurantTable({ restaurants }: RestaurantTableProps) {
@@ -38,8 +38,12 @@ export default function RestaurantTable({ restaurants }: RestaurantTableProps) {
                   </div>
                 </TableCell>
                 <TableCell>{restaurant.cuisine_description}</TableCell>
-                <TableCell className="text-center">N/A</TableCell>
-                <TableCell className="text-center">N/A</TableCell>
+                <TableCell className="text-center">
+                  {restaurant.inspections[0].grade}
+                </TableCell>
+                <TableCell className="text-center">
+                  {restaurant.inspections[0].score}
+                </TableCell>
                 <TableCell className="text-right">
                   <Link
                     to="/restaurants/$camis"
