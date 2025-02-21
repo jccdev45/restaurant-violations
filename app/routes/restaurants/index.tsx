@@ -4,7 +4,7 @@ import { restaurantsQueryOptions } from "@/utils/restaurants";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/restaurants")({
+export const Route = createFileRoute("/restaurants/")({
   loader: async ({ context }) => {
     await context.queryClient.ensureQueryData(restaurantsQueryOptions());
   },
@@ -12,23 +12,22 @@ export const Route = createFileRoute("/restaurants")({
 });
 
 function RouteComponent() {
-  const restaurantsQuery = useSuspenseQuery(restaurantsQueryOptions());
+  const {
+    data: { restaurants },
+  } = useSuspenseQuery(restaurantsQueryOptions());
 
   return (
     <div className="p-2 flex gap-2">
       <ul className="list-disc pl-4">
-        {[
-          ...restaurantsQuery.data,
-          { id: "i-do-not-exist", name: "Non-existent User", email: "" },
-        ].map((restaurant) => {
+        {restaurants.map((restaurant) => {
           const id = useId();
 
           return (
             <li key={`${id}-${restaurant.dba}`} className="whitespace-nowrap">
               <Link
-                to="/restaurants/$restaurantId"
+                to="/restaurants/$camis"
                 params={{
-                  restaurantId: String(restaurant.camis),
+                  camis: String(restaurant.camis),
                 }}
                 className="block py-1 text-blue-800 hover:text-blue-600"
                 activeProps={{ className: "text-black font-bold" }}
