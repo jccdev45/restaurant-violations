@@ -18,7 +18,7 @@ function RouteComponent() {
   } = useSuspenseQuery(restaurantsQueryOptions());
 
   return (
-    <div className="p-2 flex gap-2">
+    <div className="p-2 flex gap-2 flex-1 h-full">
       <TooltipProvider>
         <DataTable columns={columns} data={restaurants} />
       </TooltipProvider>

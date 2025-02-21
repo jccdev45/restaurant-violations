@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/tooltip";
 import { cn, formatPhoneNumber } from "@/lib/utils";
 import type { Restaurant } from "@/types/restaurant-types";
+import { Link } from "@tanstack/react-router";
 import {
   type Column, type ColumnDef, createColumnHelper,
 } from "@tanstack/react-table";
@@ -97,15 +98,21 @@ export const columns: ColumnDef<Restaurant, any>[] = [
   columnHelper.accessor("dba", {
     header: "Name",
     cell: (info) => info.getValue(),
+    enableSorting: false,
+    enableHiding: false,
   }),
   columnHelper.accessor((row) => `${row.building} ${row.street}`, {
     id: "address",
     header: "Address",
     cell: (info) => info.getValue(),
+    enableSorting: false,
+    enableHiding: false,
   }),
   columnHelper.accessor("boro", {
-    header: ({ column }) => <SortingButton column={column} label="Borough" />,
+    header: "Borough",
     cell: (info) => info.getValue(),
+    enableSorting: false,
+    enableHiding: false,
   }),
   columnHelper.accessor("zipcode", {
     header: ({ column }) => <SortingButton column={column} label="Zip" />,
@@ -227,11 +234,33 @@ export const columns: ColumnDef<Restaurant, any>[] = [
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => console.log(props.row.original)}>
-            View Details
+          <DropdownMenuItem
+            onClick={() => console.log(props.row.original)}
+            asChild
+          >
+            <Link
+              to="/restaurants/$camis/inspections/$inspectionDate"
+              params={{
+                camis: props.row.original.camis,
+                inspectionDate:
+                  props.row.original.inspections[0]?.inspection_date,
+              }}
+            >
+              View Details
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>View Inspection History</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => console.log(props.row.original)}
+            asChild
+          >
+            <Link
+              to="/restaurants/$camis"
+              params={{ camis: props.row.original.camis }}
+            >
+              View Inspection History
+            </Link>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
