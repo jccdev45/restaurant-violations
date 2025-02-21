@@ -1,29 +1,28 @@
-import axios from "redaxios";
-
 import { isRedaxiosError } from "@/lib/utils";
+import type {
+  FullInspectionData, RestaurantInfo, RestaurantListResponse,
+  RestaurantWithInspections, SingleRestaurantResponse, Violation,
+} from "@/types/restaurant-types";
 import { queryOptions } from "@tanstack/react-query";
 import { notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/start";
+import axios from "redaxios";
 
-import type {
-  SingleRestaurantResponse,
-  RestaurantListResponse,
-  RestaurantInfo,
-  RestaurantWithInspections,
-  Violation,
-  FullInspectionData,
-} from "@/types/restaurant-types";
 const BASE_URL = "https://data.cityofnewyork.us/resource/43nn-pn8j.json";
 
 export const fetchRestaurants = createServerFn({ method: "GET" }).handler(
   async (): Promise<RestaurantListResponse> => {
     console.info("Fetching restaurants...");
     try {
+      const params = new URLSearchParams({
+        $limit: "100",
+      });
       const response = await axios.get<any[]>(BASE_URL, {
         headers: {
           Accept: "application/json",
           "X-App-Token": process.env.RESTAURANT_API_APP_TOKEN!,
         },
+        params,
       });
 
       const restaurants: RestaurantInfo[] = response.data.map((item: any) => ({
