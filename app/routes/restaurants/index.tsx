@@ -1,5 +1,5 @@
-import { columns } from "@/components/restaurants/columns";
-import { DataTable } from "@/components/restaurants/data-table";
+import { columns } from "@/components/data-table/columns";
+import { DataTable } from "@/components/data-table/data-table";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { restaurantsQueryOptions } from "@/utils/restaurants";
 import { useSuspenseQuery } from "@tanstack/react-query";

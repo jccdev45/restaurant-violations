@@ -1,16 +1,13 @@
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
+import { DataTablePagination } from "@/components/data-table/table-pagination";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import {
   type ColumnDef, type ColumnFiltersState, flexRender, getCoreRowModel,
-  getFilteredRowModel, getPaginationRowModel, getSortedRowModel,
-  type SortingState, useReactTable, type VisibilityState,
+  getFacetedRowModel, getFacetedUniqueValues, getFilteredRowModel,
+  getPaginationRowModel, getSortedRowModel, type SortingState, useReactTable,
+  type VisibilityState,
 } from "@tanstack/react-table";
 import { useState } from "react";
 
@@ -23,6 +20,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [rowSelection, setRowSelection] = useState({});
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -30,23 +28,28 @@ export function DataTable<TData, TValue>({
   const table = useReactTable({
     columns,
     data,
+    enableRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    onSortingChange: setSorting,
     state: {
-      sorting,
       columnFilters,
       columnVisibility,
+      rowSelection,
+      sorting,
     },
   });
 
   return (
-    <div className="">
-      <div className="flex items-center py-4">
+    <div className="space-y-4">
+      {/* <div className="flex items-center">
         <Input
           placeholder="Filter restaurants..."
           value={(table.getColumn("dba")?.getFilterValue() as string) ?? ""}
@@ -81,7 +84,8 @@ export function DataTable<TData, TValue>({
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+      </div> */}
+      <DataTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -132,24 +136,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
-      </div>
+      <DataTablePagination table={table} />
     </div>
   );
 }

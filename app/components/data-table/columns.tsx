@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuTrigger,
@@ -6,13 +7,14 @@ import {
 import {
   Tooltip, TooltipContent, TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { formatPhoneNumber } from "@/lib/utils";
+import { cn, formatPhoneNumber } from "@/lib/utils";
 import type { Restaurant } from "@/types/restaurant-types";
 import {
   type Column, type ColumnDef, createColumnHelper,
 } from "@tanstack/react-table";
 import {
-  ArrowUpDown, CheckCircle, MinusCircle, MoreHorizontal, TriangleAlert,
+  ArrowDown, ArrowUp, CheckCircle, ChevronsUpDown, EyeOff, MinusCircle,
+  MoreHorizontal, TriangleAlert,
 } from "lucide-react";
 
 const columnHelper = createColumnHelper<Restaurant>();
@@ -20,42 +22,78 @@ const columnHelper = createColumnHelper<Restaurant>();
 interface SortingButtonProps {
   column: Column<Restaurant, any>;
   label: string;
+  className?: string;
 }
 
-function SortingButton({ column, label }: SortingButtonProps) {
+function SortingButton({ column, label, className }: SortingButtonProps) {
+  if (!column.getCanSort()) {
+    return <div className={cn(className)}>{label}</div>;
+  }
+
   return (
-    <Button
-      variant="ghost"
-      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-    >
-      {label}
-      <ArrowUpDown className="ml-2 size-4" />
-    </Button>
+    <div className={cn("flex items-center space-x-2", className)}>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-ml-3 h-8 data-[state=open]:bg-accent"
+          >
+            <span>{label}</span>
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDown />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUp />
+            ) : (
+              <ChevronsUpDown />
+            )}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
+            <ArrowUp className="h-3.5 w-3.5 text-muted-foreground/70" />
+            Asc
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
+            <ArrowDown className="h-3.5 w-3.5 text-muted-foreground/70" />
+            Desc
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
+            <EyeOff className="h-3.5 w-3.5 text-muted-foreground/70" />
+            Hide
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }
 
 export const columns: ColumnDef<Restaurant, any>[] = [
-  columnHelper.display({
-    id: "actions",
-    cell: (props) => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => console.log(props.row.original)}>
-            View Details
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>View Inspection History</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+        className="translate-y-[2px]"
+      />
     ),
-  }),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+        className="translate-y-[2px]"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   columnHelper.accessor("dba", {
     header: "Name",
     cell: (info) => info.getValue(),
@@ -176,5 +214,26 @@ export const columns: ColumnDef<Restaurant, any>[] = [
         </Tooltip>
       );
     },
+  }),
+  columnHelper.display({
+    id: "actions",
+    cell: (props) => (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem onClick={() => console.log(props.row.original)}>
+            View Details
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>View Inspection History</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    ),
   }),
 ];
