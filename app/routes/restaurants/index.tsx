@@ -1,5 +1,6 @@
 import { columns } from "@/components/restaurants/columns";
 import { DataTable } from "@/components/restaurants/data-table";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { restaurantsQueryOptions } from "@/utils/restaurants";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
@@ -18,7 +19,9 @@ function RouteComponent() {
 
   return (
     <div className="p-2 flex gap-2">
-      <DataTable columns={columns} data={restaurants} />
+      <TooltipProvider>
+        <DataTable columns={columns} data={restaurants} />
+      </TooltipProvider>
       <hr />
       <Outlet />
     </div>
