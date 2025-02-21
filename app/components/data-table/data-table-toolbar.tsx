@@ -1,6 +1,3 @@
-"use client";
-
-// import { priorities, statuses } from "../data/data"
 import {
   DataTableViewOptions,
 } from "@/components/data-table/data-table-view-options";
