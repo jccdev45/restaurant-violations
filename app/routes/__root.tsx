@@ -1,17 +1,21 @@
 // app/routes/__root.tsx
 
-import {
-  DefaultCatchBoundary,
-} from "@/components/error/default-catch-boundary";
+import { DefaultCatchBoundary } from "@/components/error/default-catch-boundary";
 import { ModeToggle } from "@/components/mode-toggle";
 import { NotFound } from "@/components/not-found";
 import { ThemeProvider } from "@/components/theme-provider";
 import appCss from "@/styles/app.css?url";
 import { seo } from "@/utils/seo";
 import type { QueryClient } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
-  createRootRouteWithContext, HeadContent, Link, Outlet, Scripts,
+  createRootRouteWithContext,
+  HeadContent,
+  Link,
+  Outlet,
+  Scripts,
 } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import type { ReactNode } from "react";
 
 export const Route = createRootRouteWithContext<{
@@ -107,11 +111,11 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
             {children}
           </div>
         </ThemeProvider>
-        {/* <TanStackRouterDevtools initialIsOpen={false} position="bottom-right" />
+        <TanStackRouterDevtools initialIsOpen={false} position="bottom-right" />
         <ReactQueryDevtools
           initialIsOpen={false}
           buttonPosition="bottom-left"
-        /> */}
+        />
         <Scripts />
       </body>
     </html>

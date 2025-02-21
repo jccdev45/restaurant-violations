@@ -1,21 +1,35 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
-  DropdownMenuSeparator, DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Tooltip, TooltipContent, TooltipTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn, formatPhoneNumber } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import type { Restaurant } from "@/types/restaurant-types";
 import { Link } from "@tanstack/react-router";
 import {
-  type Column, type ColumnDef, createColumnHelper,
+  type Column,
+  type ColumnDef,
+  createColumnHelper,
 } from "@tanstack/react-table";
 import {
-  ArrowDown, ArrowUp, CheckCircle, ChevronsUpDown, EyeOff, MinusCircle,
-  MoreHorizontal, TriangleAlert,
+  ArrowDown,
+  ArrowUp,
+  CheckCircle,
+  ChevronsUpDown,
+  EyeOff,
+  MinusCircle,
+  MoreHorizontal,
+  TriangleAlert,
 } from "lucide-react";
 
 const columnHelper = createColumnHelper<Restaurant>();
@@ -97,14 +111,48 @@ export const columns: ColumnDef<Restaurant, any>[] = [
   },
   columnHelper.accessor("dba", {
     header: "Name",
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const name = info.getValue();
+
+      return name.length > 20 ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="cursor-help dotted whitespace-nowrap">
+              {`${name.slice(0, 20)}...`}
+            </span>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{name}</p>
+          </TooltipContent>
+        </Tooltip>
+      ) : (
+        name
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   }),
   columnHelper.accessor((row) => `${row.building} ${row.street}`, {
     id: "address",
     header: "Address",
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const address = info.getValue();
+
+      return address.length > 20 ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="cursor-help dotted whitespace-nowrap">
+              {`${address.slice(0, 20)}...`}
+            </span>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{address}</p>
+          </TooltipContent>
+        </Tooltip>
+      ) : (
+        address
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   }),
@@ -115,12 +163,8 @@ export const columns: ColumnDef<Restaurant, any>[] = [
     enableHiding: false,
   }),
   columnHelper.accessor("zipcode", {
-    header: ({ column }) => <SortingButton column={column} label="Zip" />,
+    header: "Zip",
     cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor("phone", {
-    header: "Phone",
-    cell: (info) => formatPhoneNumber(info.getValue()),
   }),
   columnHelper.accessor("cuisine_description", {
     header: "Cuisine",
@@ -131,7 +175,11 @@ export const columns: ColumnDef<Restaurant, any>[] = [
     header: ({ column }) => <SortingButton column={column} label="Date" />,
     cell: (info) =>
       info.getValue()
-        ? new Date(info.getValue() as string).toLocaleDateString("en-US")
+        ? new Date(info.getValue() as string).toLocaleDateString("en-US", {
+            year: "2-digit",
+            day: "numeric",
+            month: "numeric",
+          })
         : "N/A",
   }),
   columnHelper.accessor((row) => row.inspections[0]?.grade, {
@@ -162,28 +210,6 @@ export const columns: ColumnDef<Restaurant, any>[] = [
       );
     },
   }),
-  columnHelper.accessor((row) => row.inspections[0]?.score, {
-    id: "score",
-    header: ({ column }) => <SortingButton column={column} label="Score" />,
-    cell: (info) => {
-      const score = info.getValue();
-      return (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span className="cursor-help">{score || "N/A"}</span>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Lower scores are better:</p>
-            <ul>
-              <li>0-13 points: Grade A</li>
-              <li>14-27 points: Grade B</li>
-              <li>28+ points: Grade C</li>
-            </ul>
-          </TooltipContent>
-        </Tooltip>
-      );
-    },
-  }),
   columnHelper.accessor((row) => row.inspections[0]?.critical_flag, {
     id: "critical_flag",
     header: "Critical",
@@ -198,30 +224,52 @@ export const columns: ColumnDef<Restaurant, any>[] = [
       }
     },
   }),
-  columnHelper.accessor((row) => row.inspections[0]?.action, {
-    id: "action",
-    header: "Action",
-    cell: (info) => {
-      const action = info.getValue();
-      if (
-        !action ||
-        action === "Violations were cited in the following area(s)."
-      ) {
-        return <span className="text-gray-500">N/A</span>;
-      }
+  columnHelper.accessor(
+    (row) => row.inspections[0]?.violations[0]?.violation_description,
+    {
+      id: "violation_description",
+      header: "Description",
+      cell: (info) => {
+        const desc = info.getValue();
+        return (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="cursor-help dotted whitespace-nowrap">
+                {desc.slice(0, 50)}...
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{desc}</p>
+            </TooltipContent>
+          </Tooltip>
+        );
+      },
+    }
+  ),
+  // columnHelper.accessor((row) => row.inspections[0]?.action, {
+  //   id: "action",
+  //   header: "Action",
+  //   cell: (info) => {
+  //     const action = info.getValue();
+  //     if (
+  //       !action ||
+  //       action === "Violations were cited in the following area(s)."
+  //     ) {
+  //       return <span className="text-gray-500">N/A</span>;
+  //     }
 
-      return (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span className="cursor-help dotted">{action.slice(0, 50)}...</span>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{action}</p>
-          </TooltipContent>
-        </Tooltip>
-      );
-    },
-  }),
+  //     return (
+  //       <Tooltip>
+  //         <TooltipTrigger asChild>
+  //           <span className="cursor-help dotted">{action.slice(0, 50)}...</span>
+  //         </TooltipTrigger>
+  //         <TooltipContent>
+  //           <p>{action}</p>
+  //         </TooltipContent>
+  //       </Tooltip>
+  //     );
+  //   },
+  // }),
   columnHelper.display({
     id: "actions",
     cell: (props) => (

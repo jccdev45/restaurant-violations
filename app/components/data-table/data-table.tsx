@@ -1,12 +1,25 @@
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { DataTablePagination } from "@/components/data-table/table-pagination";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import {
-  type ColumnDef, type ColumnFiltersState, flexRender, getCoreRowModel,
-  getFacetedRowModel, getFacetedUniqueValues, getFilteredRowModel,
-  getPaginationRowModel, getSortedRowModel, type SortingState, useReactTable,
+  type ColumnDef,
+  type ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  type SortingState,
+  useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
 import { useState } from "react";
@@ -50,7 +63,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} />
-      <div className="rounded-md border">
+      <div className="rounded-md border w-full">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
