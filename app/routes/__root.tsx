@@ -1,22 +1,18 @@
 // app/routes/__root.tsx
 
-import { DefaultCatchBoundary } from "@/components/error/default-catch-boundary";
+import {
+  DefaultCatchBoundary,
+} from "@/components/error/default-catch-boundary";
+import { ModeToggle } from "@/components/mode-toggle";
 import { NotFound } from "@/components/not-found";
+import { ThemeProvider } from "@/components/theme-provider";
 import appCss from "@/styles/app.css?url";
 import { seo } from "@/utils/seo";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import {
-  createRootRouteWithContext,
-  HeadContent,
-  Link,
-  Outlet,
-  Scripts,
-} from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-
-import type { ReactNode } from "react";
-
 import type { QueryClient } from "@tanstack/react-query";
+import {
+  createRootRouteWithContext, HeadContent, Link, Outlet, Scripts,
+} from "@tanstack/react-router";
+import type { ReactNode } from "react";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -84,31 +80,38 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <HeadContent />
       </head>
       <body>
-        <div className="p-2 flex gap-2 text-lg">
-          <Link
-            to="/"
-            activeProps={{
-              className: "font-bold",
-            }}
-            activeOptions={{ exact: true }}
-          >
-            Home
-          </Link>{" "}
-          <Link
-            to="/restaurants"
-            activeProps={{
-              className: "font-bold",
-            }}
-          >
-            Restaurants
-          </Link>
-        </div>
-        {children}
-        <TanStackRouterDevtools initialIsOpen={false} position="bottom-right" />
+        <ThemeProvider defaultTheme="dark" storageKey="tanstack-ui-theme">
+          <div className="relative">
+            <header className="p-4 flex items-center justify-between">
+              <nav className="flex gap-2 text-lg">
+                <Link
+                  to="/"
+                  activeProps={{
+                    className: "font-bold",
+                  }}
+                  activeOptions={{ exact: true }}
+                >
+                  Home
+                </Link>{" "}
+                <Link
+                  to="/restaurants"
+                  activeProps={{
+                    className: "font-bold",
+                  }}
+                >
+                  Restaurants
+                </Link>
+              </nav>
+              <ModeToggle />
+            </header>
+            {children}
+          </div>
+        </ThemeProvider>
+        {/* <TanStackRouterDevtools initialIsOpen={false} position="bottom-right" />
         <ReactQueryDevtools
           initialIsOpen={false}
           buttonPosition="bottom-left"
-        />
+        /> */}
         <Scripts />
       </body>
     </html>
