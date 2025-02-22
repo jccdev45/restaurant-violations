@@ -20,6 +20,7 @@ export interface RestaurantBase {
 
 // Inspection details
 export interface InspectionDetails {
+  inspectionId: string;
   inspection_date: string;
   action?: string;
   critical_flag?: string;

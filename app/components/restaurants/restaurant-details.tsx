@@ -1,5 +1,9 @@
 import {
-  Card, CardContent, CardDescription, CardHeader, CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import type { Restaurant } from "@/types/restaurant-types";
 import { MapPin, Phone, Utensils } from "lucide-react";
@@ -19,7 +23,7 @@ export function RestaurantDetails({ restaurant }: RestaurantDetailsProps) {
         <div className="space-y-2">
           <div className="flex items-center">
             <MapPin className="mr-2 h-4 w-4" />
-            <span>{`${restaurant.building} ${restaurant.street}, ${restaurant.boro}, ${restaurant.zipcode}`}</span>
+            <span>{`${restaurant.building} ${restaurant.street}, ${restaurant.boro}, ${restaurant.zipcode ?? `N/A`}`}</span>
           </div>
           {restaurant.phone && (
             <div className="flex items-center">

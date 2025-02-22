@@ -22,3 +22,10 @@ export function formatPhoneNumber(input: string) {
   }
   return input;
 }
+
+export function generateInspectionId(
+  camis: string,
+  inspection_date: string
+): string {
+  return `${camis}-${inspection_date}`;
+}

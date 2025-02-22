@@ -1,16 +1,13 @@
-import {
-  RestaurantErrorComponent,
-} from "@/components/error/restaurant-catch-boundary";
+// /restaurants/$camis/index.tsx
+import { RestaurantErrorComponent } from "@/components/error/restaurant-catch-boundary";
 import { NotFound } from "@/components/not-found";
-import {
-  InspectionOverview,
-} from "@/components/restaurants/inspection-overview";
+import { InspectionOverview } from "@/components/restaurants/inspection-overview";
 import { RestaurantDetails } from "@/components/restaurants/restaurant-details";
 import { restaurantQueryOptions } from "@/utils/restaurants";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/restaurants/$camis")({
+export const Route = createFileRoute("/restaurants/$camis/")({
   loader: async ({ context, params: { camis } }) => {
     await context.queryClient.ensureQueryData(restaurantQueryOptions(camis));
   },

@@ -85,7 +85,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       </head>
       <body>
         <ThemeProvider defaultTheme="dark" storageKey="tanstack-ui-theme">
-          <div className="relative">
+          <div className="relative container mx-auto flex flex-col">
             <header className="p-4 flex items-center justify-between">
               <nav className="flex gap-2 text-lg">
                 <Link
@@ -108,7 +108,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
               </nav>
               <ModeToggle />
             </header>
-            {children}
+            <main className="flex-1">{children}</main>
           </div>
         </ThemeProvider>
         <TanStackRouterDevtools initialIsOpen={false} position="bottom-right" />

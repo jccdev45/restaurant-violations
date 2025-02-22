@@ -13,9 +13,9 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as RestaurantsIndexImport } from './routes/restaurants/index'
-import { Route as RestaurantsCamisImport } from './routes/restaurants/$camis'
+import { Route as RestaurantsCamisIndexImport } from './routes/restaurants/$camis/index'
 import { Route as RestaurantsCamisInspectionsIndexImport } from './routes/restaurants/$camis/inspections/index'
-import { Route as RestaurantsCamisInspectionsInspectionDateImport } from './routes/restaurants/$camis/inspections/$inspectionDate'
+import { Route as RestaurantsCamisInspectionsInspectionIdIndexImport } from './routes/restaurants/$camis/inspections/$inspectionId/index'
 
 // Create/Update Routes
 
@@ -31,24 +31,24 @@ const RestaurantsIndexRoute = RestaurantsIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const RestaurantsCamisRoute = RestaurantsCamisImport.update({
-  id: '/restaurants/$camis',
-  path: '/restaurants/$camis',
+const RestaurantsCamisIndexRoute = RestaurantsCamisIndexImport.update({
+  id: '/restaurants/$camis/',
+  path: '/restaurants/$camis/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const RestaurantsCamisInspectionsIndexRoute =
   RestaurantsCamisInspectionsIndexImport.update({
-    id: '/inspections/',
-    path: '/inspections/',
-    getParentRoute: () => RestaurantsCamisRoute,
+    id: '/restaurants/$camis/inspections/',
+    path: '/restaurants/$camis/inspections/',
+    getParentRoute: () => rootRoute,
   } as any)
 
-const RestaurantsCamisInspectionsInspectionDateRoute =
-  RestaurantsCamisInspectionsInspectionDateImport.update({
-    id: '/inspections/$inspectionDate',
-    path: '/inspections/$inspectionDate',
-    getParentRoute: () => RestaurantsCamisRoute,
+const RestaurantsCamisInspectionsInspectionIdIndexRoute =
+  RestaurantsCamisInspectionsInspectionIdIndexImport.update({
+    id: '/restaurants/$camis/inspections/$inspectionId/',
+    path: '/restaurants/$camis/inspections/$inspectionId/',
+    getParentRoute: () => rootRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -62,13 +62,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/restaurants/$camis': {
-      id: '/restaurants/$camis'
-      path: '/restaurants/$camis'
-      fullPath: '/restaurants/$camis'
-      preLoaderRoute: typeof RestaurantsCamisImport
-      parentRoute: typeof rootRoute
-    }
     '/restaurants/': {
       id: '/restaurants/'
       path: '/restaurants'
@@ -76,99 +69,97 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RestaurantsIndexImport
       parentRoute: typeof rootRoute
     }
-    '/restaurants/$camis/inspections/$inspectionDate': {
-      id: '/restaurants/$camis/inspections/$inspectionDate'
-      path: '/inspections/$inspectionDate'
-      fullPath: '/restaurants/$camis/inspections/$inspectionDate'
-      preLoaderRoute: typeof RestaurantsCamisInspectionsInspectionDateImport
-      parentRoute: typeof RestaurantsCamisImport
+    '/restaurants/$camis/': {
+      id: '/restaurants/$camis/'
+      path: '/restaurants/$camis'
+      fullPath: '/restaurants/$camis'
+      preLoaderRoute: typeof RestaurantsCamisIndexImport
+      parentRoute: typeof rootRoute
     }
     '/restaurants/$camis/inspections/': {
       id: '/restaurants/$camis/inspections/'
-      path: '/inspections'
+      path: '/restaurants/$camis/inspections'
       fullPath: '/restaurants/$camis/inspections'
       preLoaderRoute: typeof RestaurantsCamisInspectionsIndexImport
-      parentRoute: typeof RestaurantsCamisImport
+      parentRoute: typeof rootRoute
+    }
+    '/restaurants/$camis/inspections/$inspectionId/': {
+      id: '/restaurants/$camis/inspections/$inspectionId/'
+      path: '/restaurants/$camis/inspections/$inspectionId'
+      fullPath: '/restaurants/$camis/inspections/$inspectionId'
+      preLoaderRoute: typeof RestaurantsCamisInspectionsInspectionIdIndexImport
+      parentRoute: typeof rootRoute
     }
   }
 }
 
 // Create and export the route tree
 
-interface RestaurantsCamisRouteChildren {
-  RestaurantsCamisInspectionsInspectionDateRoute: typeof RestaurantsCamisInspectionsInspectionDateRoute
-  RestaurantsCamisInspectionsIndexRoute: typeof RestaurantsCamisInspectionsIndexRoute
-}
-
-const RestaurantsCamisRouteChildren: RestaurantsCamisRouteChildren = {
-  RestaurantsCamisInspectionsInspectionDateRoute:
-    RestaurantsCamisInspectionsInspectionDateRoute,
-  RestaurantsCamisInspectionsIndexRoute: RestaurantsCamisInspectionsIndexRoute,
-}
-
-const RestaurantsCamisRouteWithChildren =
-  RestaurantsCamisRoute._addFileChildren(RestaurantsCamisRouteChildren)
-
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/restaurants/$camis': typeof RestaurantsCamisRouteWithChildren
   '/restaurants': typeof RestaurantsIndexRoute
-  '/restaurants/$camis/inspections/$inspectionDate': typeof RestaurantsCamisInspectionsInspectionDateRoute
+  '/restaurants/$camis': typeof RestaurantsCamisIndexRoute
   '/restaurants/$camis/inspections': typeof RestaurantsCamisInspectionsIndexRoute
+  '/restaurants/$camis/inspections/$inspectionId': typeof RestaurantsCamisInspectionsInspectionIdIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/restaurants/$camis': typeof RestaurantsCamisRouteWithChildren
   '/restaurants': typeof RestaurantsIndexRoute
-  '/restaurants/$camis/inspections/$inspectionDate': typeof RestaurantsCamisInspectionsInspectionDateRoute
+  '/restaurants/$camis': typeof RestaurantsCamisIndexRoute
   '/restaurants/$camis/inspections': typeof RestaurantsCamisInspectionsIndexRoute
+  '/restaurants/$camis/inspections/$inspectionId': typeof RestaurantsCamisInspectionsInspectionIdIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/restaurants/$camis': typeof RestaurantsCamisRouteWithChildren
   '/restaurants/': typeof RestaurantsIndexRoute
-  '/restaurants/$camis/inspections/$inspectionDate': typeof RestaurantsCamisInspectionsInspectionDateRoute
+  '/restaurants/$camis/': typeof RestaurantsCamisIndexRoute
   '/restaurants/$camis/inspections/': typeof RestaurantsCamisInspectionsIndexRoute
+  '/restaurants/$camis/inspections/$inspectionId/': typeof RestaurantsCamisInspectionsInspectionIdIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/restaurants/$camis'
     | '/restaurants'
-    | '/restaurants/$camis/inspections/$inspectionDate'
+    | '/restaurants/$camis'
     | '/restaurants/$camis/inspections'
+    | '/restaurants/$camis/inspections/$inspectionId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/restaurants/$camis'
     | '/restaurants'
-    | '/restaurants/$camis/inspections/$inspectionDate'
+    | '/restaurants/$camis'
     | '/restaurants/$camis/inspections'
+    | '/restaurants/$camis/inspections/$inspectionId'
   id:
     | '__root__'
     | '/'
-    | '/restaurants/$camis'
     | '/restaurants/'
-    | '/restaurants/$camis/inspections/$inspectionDate'
+    | '/restaurants/$camis/'
     | '/restaurants/$camis/inspections/'
+    | '/restaurants/$camis/inspections/$inspectionId/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  RestaurantsCamisRoute: typeof RestaurantsCamisRouteWithChildren
   RestaurantsIndexRoute: typeof RestaurantsIndexRoute
+  RestaurantsCamisIndexRoute: typeof RestaurantsCamisIndexRoute
+  RestaurantsCamisInspectionsIndexRoute: typeof RestaurantsCamisInspectionsIndexRoute
+  RestaurantsCamisInspectionsInspectionIdIndexRoute: typeof RestaurantsCamisInspectionsInspectionIdIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  RestaurantsCamisRoute: RestaurantsCamisRouteWithChildren,
   RestaurantsIndexRoute: RestaurantsIndexRoute,
+  RestaurantsCamisIndexRoute: RestaurantsCamisIndexRoute,
+  RestaurantsCamisInspectionsIndexRoute: RestaurantsCamisInspectionsIndexRoute,
+  RestaurantsCamisInspectionsInspectionIdIndexRoute:
+    RestaurantsCamisInspectionsInspectionIdIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -182,30 +173,26 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/restaurants/$camis",
-        "/restaurants/"
+        "/restaurants/",
+        "/restaurants/$camis/",
+        "/restaurants/$camis/inspections/",
+        "/restaurants/$camis/inspections/$inspectionId/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/restaurants/$camis": {
-      "filePath": "restaurants/$camis.tsx",
-      "children": [
-        "/restaurants/$camis/inspections/$inspectionDate",
-        "/restaurants/$camis/inspections/"
-      ]
-    },
     "/restaurants/": {
       "filePath": "restaurants/index.tsx"
     },
-    "/restaurants/$camis/inspections/$inspectionDate": {
-      "filePath": "restaurants/$camis/inspections/$inspectionDate.tsx",
-      "parent": "/restaurants/$camis"
+    "/restaurants/$camis/": {
+      "filePath": "restaurants/$camis/index.tsx"
     },
     "/restaurants/$camis/inspections/": {
-      "filePath": "restaurants/$camis/inspections/index.tsx",
-      "parent": "/restaurants/$camis"
+      "filePath": "restaurants/$camis/inspections/index.tsx"
+    },
+    "/restaurants/$camis/inspections/$inspectionId/": {
+      "filePath": "restaurants/$camis/inspections/$inspectionId/index.tsx"
     }
   }
 }

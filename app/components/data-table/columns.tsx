@@ -5,7 +5,11 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -113,7 +117,6 @@ export const columns: ColumnDef<Restaurant, any>[] = [
     header: "Name",
     cell: (info) => {
       const name = info.getValue();
-
       return name.length > 20 ? (
         <Tooltip>
           <TooltipTrigger asChild>
@@ -137,7 +140,6 @@ export const columns: ColumnDef<Restaurant, any>[] = [
     header: "Address",
     cell: (info) => {
       const address = info.getValue();
-
       return address.length > 20 ? (
         <Tooltip>
           <TooltipTrigger asChild>
@@ -170,68 +172,100 @@ export const columns: ColumnDef<Restaurant, any>[] = [
     header: "Cuisine",
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor((row) => row.inspections[0]?.inspection_date, {
-    id: "inspection_date",
-    header: ({ column }) => <SortingButton column={column} label="Date" />,
-    cell: (info) =>
-      info.getValue()
-        ? new Date(info.getValue() as string).toLocaleDateString("en-US", {
-            year: "2-digit",
-            day: "numeric",
-            month: "numeric",
-          })
-        : "N/A",
-  }),
-  columnHelper.accessor((row) => row.inspections[0]?.grade, {
-    id: "grade",
-    header: "Grade",
-    cell: (info) => {
-      const grade = info.getValue() as
-        | keyof typeof gradeDescriptions
-        | undefined;
-      const gradeDescriptions = {
-        N: "Not Yet Graded",
-        A: "Grade A",
-        B: "Grade B",
-        C: "Grade C",
-        Z: "Grade Pending",
-        P: "Grade Pending issued on re-opening following an initial inspection that resulted in a closure",
-      };
-
-      return (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span className="cursor-help">{grade || "N/A"}</span>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{grade ? gradeDescriptions[grade] : "Unknown Grade"}</p>
-          </TooltipContent>
-        </Tooltip>
-      );
-    },
-  }),
-  columnHelper.accessor((row) => row.inspections[0]?.critical_flag, {
-    id: "critical_flag",
-    header: "Critical",
-    cell: (info) => {
-      const value = info.getValue();
-      if (value === "Critical") {
-        return <TriangleAlert color="red" aria-label="Critical" />;
-      } else if (value === "Not Critical") {
-        return <CheckCircle color="green" aria-label="Not Critical" />;
-      } else {
-        return <MinusCircle color="gray" aria-label="Not Applicable" />;
-      }
-    },
-  }),
   columnHelper.accessor(
-    (row) => row.inspections[0]?.violations[0]?.violation_description,
+    (row) => {
+      // Get the most recent inspection
+      const inspections = row.inspections;
+      if (!inspections || inspections.length === 0) return null;
+      return inspections[0].inspection_date;
+    },
+    {
+      id: "inspection_date",
+      header: ({ column }) => <SortingButton column={column} label="Date" />,
+      cell: (info) => {
+        const date = info.getValue();
+        return date
+          ? new Date(date).toLocaleDateString("en-US", {
+              year: "2-digit",
+              day: "numeric",
+              month: "numeric",
+            })
+          : "N/A";
+      },
+    }
+  ),
+  columnHelper.accessor(
+    (row) => {
+      // Get the most recent inspection
+      const inspections = row.inspections;
+      if (!inspections || inspections.length === 0) return null;
+      return inspections[0].grade;
+    },
+    {
+      id: "grade",
+      header: "Grade",
+      cell: (info) => {
+        const grade = info.getValue() as
+          | keyof typeof gradeDescriptions
+          | undefined;
+        const gradeDescriptions = {
+          N: "Not Yet Graded",
+          A: "Grade A",
+          B: "Grade B",
+          C: "Grade C",
+          Z: "Grade Pending",
+          P: "Grade Pending issued on re-opening following an initial inspection that resulted in a closure",
+        };
+        return (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="cursor-help">{grade || "N/A"}</span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{grade ? gradeDescriptions[grade] : "Unknown Grade"}</p>
+            </TooltipContent>
+          </Tooltip>
+        );
+      },
+    }
+  ),
+  columnHelper.accessor(
+    (row) => {
+      // Get the most recent inspection
+      const inspections = row.inspections;
+      if (!inspections || inspections.length === 0) return null;
+      return inspections[0].critical_flag;
+    },
+    {
+      id: "critical_flag",
+      header: "Critical",
+      cell: (info) => {
+        const value = info.getValue();
+        if (value === "Critical") {
+          return <TriangleAlert color="red" aria-label="Critical" />;
+        } else if (value === "Not Critical") {
+          return <CheckCircle color="green" aria-label="Not Critical" />;
+        } else {
+          return <MinusCircle color="gray" aria-label="Not Applicable" />;
+        }
+      },
+    }
+  ),
+  columnHelper.accessor(
+    (row) => {
+      // Get the most recent inspection and its first violation
+      const inspections = row.inspections;
+      if (!inspections || inspections.length === 0) return null;
+      const violations = inspections[0].violations;
+      if (!violations || violations.length === 0) return null;
+      return violations[0].violation_description;
+    },
     {
       id: "violation_description",
       header: "Description",
       cell: (info) => {
         const desc = info.getValue();
-        return (
+        return desc ? (
           <Tooltip>
             <TooltipTrigger asChild>
               <span className="cursor-help dotted whitespace-nowrap">
@@ -242,75 +276,60 @@ export const columns: ColumnDef<Restaurant, any>[] = [
               <p>{desc}</p>
             </TooltipContent>
           </Tooltip>
+        ) : (
+          "N/A"
         );
       },
     }
   ),
-  // columnHelper.accessor((row) => row.inspections[0]?.action, {
-  //   id: "action",
-  //   header: "Action",
-  //   cell: (info) => {
-  //     const action = info.getValue();
-  //     if (
-  //       !action ||
-  //       action === "Violations were cited in the following area(s)."
-  //     ) {
-  //       return <span className="text-gray-500">N/A</span>;
-  //     }
-
-  //     return (
-  //       <Tooltip>
-  //         <TooltipTrigger asChild>
-  //           <span className="cursor-help dotted">{action.slice(0, 50)}...</span>
-  //         </TooltipTrigger>
-  //         <TooltipContent>
-  //           <p>{action}</p>
-  //         </TooltipContent>
-  //       </Tooltip>
-  //     );
-  //   },
-  // }),
   columnHelper.display({
     id: "actions",
-    cell: (props) => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => console.log(props.row.original)}
-            asChild
-          >
-            <Link
-              to="/restaurants/$camis/inspections/$inspectionDate"
-              params={{
-                camis: props.row.original.camis,
-                inspectionDate:
-                  props.row.original.inspections[0]?.inspection_date,
-              }}
-            >
-              View Details
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => console.log(props.row.original)}
-            asChild
-          >
-            <Link
-              to="/restaurants/$camis"
-              params={{ camis: props.row.original.camis }}
-            >
-              View Inspection History
-            </Link>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
+    cell: (props) => {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>Inspections</DropdownMenuSubTrigger>
+              <DropdownMenuPortal>
+                <DropdownMenuSubContent>
+                  {props.row.original.inspections.map((inspection) => (
+                    <DropdownMenuItem key={inspection.inspectionId} asChild>
+                      <Link
+                        to="/restaurants/$camis/inspections/$inspectionId"
+                        params={{
+                          camis: props.row.original.camis,
+                          inspectionId: inspection.inspectionId,
+                        }}
+                      >
+                        {new Date(
+                          inspection.inspection_date
+                        ).toLocaleDateString()}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuSubContent>
+              </DropdownMenuPortal>
+            </DropdownMenuSub>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link
+                to="/restaurants/$camis"
+                params={{ camis: props.row.original.camis }}
+              >
+                Restaurant Listing
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   }),
 ];
