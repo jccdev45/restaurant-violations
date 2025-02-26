@@ -1,3 +1,6 @@
+import type { restaurantSearchSchema } from "@/schema/restaurantSchema";
+import type { z } from "zod";
+
 // Base restaurant information
 export interface RestaurantBase {
   camis: string;
@@ -56,3 +59,7 @@ export interface RestaurantListResponse {
 export interface SingleRestaurantResponse {
   restaurant: Restaurant;
 }
+
+export type RestaurantSearchParams = Partial<
+  z.infer<typeof restaurantSearchSchema>
+>;

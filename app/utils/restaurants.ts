@@ -3,7 +3,7 @@ import type {
   FullInspectionData,
   Restaurant,
   RestaurantListResponse,
-  SingleRestaurantResponse,
+  RestaurantSearchParams,
   Violation,
 } from "@/types/restaurant-types";
 import { queryOptions } from "@tanstack/react-query";
@@ -12,6 +12,11 @@ import { createServerFn } from "@tanstack/start";
 import axios from "redaxios";
 
 const BASE_URL = "https://data.cityofnewyork.us/resource/43nn-pn8j.json";
+
+const DEFAULT_PARAMS: Partial<RestaurantSearchParams["restaurantsView"]> = {
+  $order: "inspection_date DESC", // Default $order as a string
+  $limit: 500, // Default limit
+};
 
 function transformRestaurantData(data: any[]): Restaurant[] {
   const restaurantsMap = data.reduce<Record<string, Restaurant>>(
@@ -82,14 +87,29 @@ function transformRestaurantData(data: any[]): Restaurant[] {
   return Object.values(restaurantsMap);
 }
 
-const fetchData = async <T>(params: Record<string, string>): Promise<T> => {
+const fetchData = async <T>({
+  params,
+  camis,
+}: {
+  params?: RestaurantSearchParams["restaurantsView"];
+  camis?: string;
+}): Promise<T> => {
+  console.log("🚀 ~ params:", params);
+  console.log("🚀 ~ camis:", camis);
+
+  //Merge default params with provided params, overwriting defaults if needed.
+  const mergedParams: Partial<RestaurantSearchParams["restaurantsView"]> = {
+    ...DEFAULT_PARAMS,
+    ...params,
+  };
+
   try {
     const response = await axios.get<T>(BASE_URL, {
       headers: {
         Accept: "application/json",
         "X-App-Token": process.env.RESTAURANT_API_APP_TOKEN!,
       },
-      params,
+      params: camis ? { camis } : mergedParams,
     });
     return response.data;
   } catch (error) {
@@ -101,38 +121,38 @@ const fetchData = async <T>(params: Record<string, string>): Promise<T> => {
   }
 };
 
-export const fetchRestaurants = createServerFn({ method: "GET" }).handler(
-  async (): Promise<RestaurantListResponse> => {
-    console.info("Fetching restaurants...");
-    const params = {
-      // $limit: "500",
-      $order: "inspection_date DESC", // Get the latest inspection first
-    };
-    const data = await fetchData<any[]>(params);
+export const fetchRestaurants = createServerFn({ method: "GET" })
+  .validator((d: RestaurantSearchParams["restaurantsView"]) => d)
+  .handler(
+    async ({ data: restaurantsView }): Promise<RestaurantListResponse> => {
+      console.log("🚀 ~ .handler ~ params:", restaurantsView);
 
-    const restaurants = transformRestaurantData(data);
+      const data = await fetchData<any[]>({
+        params: restaurantsView,
+      });
 
-    return { restaurants };
-  }
-);
+      const restaurants = transformRestaurantData(data);
 
-export const restaurantsQueryOptions = () =>
+      return { restaurants };
+    }
+  );
+
+export const restaurantsQueryOptions = (params: RestaurantSearchParams) =>
   queryOptions({
     queryKey: ["restaurants"],
-    queryFn: () => fetchRestaurants(),
+    queryFn: () => fetchRestaurants({ data: params.restaurantsView }),
   });
 
 export const fetchRestaurant = createServerFn({ method: "GET" })
   .validator((d: string) => d)
-  .handler(async ({ data: camis }): Promise<SingleRestaurantResponse> => {
-    console.info(`Fetching restaurant with CAMIS ${camis}`);
-    const data = await fetchData<any[]>({ camis });
+  .handler(async ({ data }) => {
+    const res = await fetchData<any[]>({ camis: data });
 
-    if (data.length === 0) {
+    if (res.length === 0) {
       throw notFound();
     }
 
-    const [restaurant] = transformRestaurantData(data);
+    const [restaurant] = transformRestaurantData(res);
 
     return { restaurant };
   });

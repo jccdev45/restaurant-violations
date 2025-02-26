@@ -1,7 +1,7 @@
 // app/routes/__root.tsx
 
 import { DefaultCatchBoundary } from "@/components/error/default-catch-boundary";
-import { ModeToggle } from "@/components/mode-toggle";
+import { Header } from "@/components/header";
 import { NotFound } from "@/components/not-found";
 import { ThemeProvider } from "@/components/theme-provider";
 import appCss from "@/styles/app.css?url";
@@ -11,7 +11,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
   createRootRouteWithContext,
   HeadContent,
-  Link,
   Outlet,
   Scripts,
 } from "@tanstack/react-router";
@@ -82,33 +81,26 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
     <html suppressHydrationWarning>
       <head>
         <HeadContent />
+        {/* <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              let theme = document.cookie.match(/ui-theme=([^;]+)/)?.[1] || 'system';
+              let root = document.documentElement;
+              
+              if (theme === 'system') {
+                theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+              }
+              
+              root.classList.add(theme);
+            `,
+          }}
+        /> */}
       </head>
-      <body>
+      <body className="h-svh">
         <ThemeProvider defaultTheme="dark" storageKey="tanstack-ui-theme">
           <div className="relative container mx-auto flex flex-col">
-            <header className="p-4 flex items-center justify-between">
-              <nav className="flex gap-2 text-lg">
-                <Link
-                  to="/"
-                  activeProps={{
-                    className: "font-bold",
-                  }}
-                  activeOptions={{ exact: true }}
-                >
-                  Home
-                </Link>{" "}
-                <Link
-                  to="/restaurants"
-                  activeProps={{
-                    className: "font-bold",
-                  }}
-                >
-                  Restaurants
-                </Link>
-              </nav>
-              <ModeToggle />
-            </header>
-            <main className="flex-1">{children}</main>
+            <Header />
+            <div className="flex-1">{children}</div>
           </div>
         </ThemeProvider>
         <TanStackRouterDevtools initialIsOpen={false} position="bottom-right" />

@@ -12,7 +12,7 @@ export const Route = createFileRoute(
     );
 
     const inspection = restaurant.inspections.find(
-      (insp) => insp.inspectionId === inspectionId
+      (insp: { inspectionId: string }) => insp.inspectionId === inspectionId
     );
 
     if (!inspection) {

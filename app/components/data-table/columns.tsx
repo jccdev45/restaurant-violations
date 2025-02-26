@@ -166,7 +166,7 @@ export const columns: ColumnDef<Restaurant, any>[] = [
   }),
   columnHelper.accessor("zipcode", {
     header: "Zip",
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue() ?? "---",
   }),
   columnHelper.accessor("cuisine_description", {
     header: "Cuisine",
@@ -192,6 +192,7 @@ export const columns: ColumnDef<Restaurant, any>[] = [
             })
           : "N/A";
       },
+      // sortingFn: "datetime", // Add a sorting function, if you want to sort by this date
     }
   ),
   columnHelper.accessor(
@@ -219,7 +220,7 @@ export const columns: ColumnDef<Restaurant, any>[] = [
         return (
           <Tooltip>
             <TooltipTrigger asChild>
-              <span className="cursor-help">{grade || "N/A"}</span>
+              <span className="cursor-help">{grade || "-"}</span>
             </TooltipTrigger>
             <TooltipContent>
               <p>{grade ? gradeDescriptions[grade] : "Unknown Grade"}</p>
@@ -277,7 +278,7 @@ export const columns: ColumnDef<Restaurant, any>[] = [
             </TooltipContent>
           </Tooltip>
         ) : (
-          "N/A"
+          "Description not provided"
         );
       },
     }
