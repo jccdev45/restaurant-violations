@@ -1,9 +1,10 @@
 // app/routes/__root.tsx
 
+import { AppSidebar } from "@/components/app-sidebar";
 import { DefaultCatchBoundary } from "@/components/error/default-catch-boundary";
-import { Header } from "@/components/header";
 import { NotFound } from "@/components/not-found";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import appCss from "@/styles/app.css?url";
 import { seo } from "@/utils/seo";
 import type { QueryClient } from "@tanstack/react-query";
@@ -71,7 +72,14 @@ export const Route = createRootRouteWithContext<{
 function RootComponent() {
   return (
     <RootDocument>
-      <Outlet />
+      <SidebarProvider>
+        <AppSidebar />
+        <div className="flex flex-col h-full">
+          <main className="flex-1 flex">
+            <Outlet />
+          </main>
+        </div>
+      </SidebarProvider>
     </RootDocument>
   );
 }
@@ -81,27 +89,10 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
     <html suppressHydrationWarning>
       <head>
         <HeadContent />
-        {/* <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              let theme = document.cookie.match(/ui-theme=([^;]+)/)?.[1] || 'system';
-              let root = document.documentElement;
-              
-              if (theme === 'system') {
-                theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-              }
-              
-              root.classList.add(theme);
-            `,
-          }}
-        /> */}
       </head>
       <body className="h-svh">
         <ThemeProvider defaultTheme="dark" storageKey="tanstack-ui-theme">
-          <div className="relative container mx-auto flex flex-col">
-            <Header />
-            <div className="flex-1">{children}</div>
-          </div>
+          {children}
         </ThemeProvider>
         <TanStackRouterDevtools initialIsOpen={false} position="bottom-right" />
         <ReactQueryDevtools

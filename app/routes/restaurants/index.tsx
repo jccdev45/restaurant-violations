@@ -3,7 +3,7 @@ import { DataTable } from "@/components/data-table/data-table";
 import { restaurantSearchSchema } from "@/schema/restaurantSchema";
 import { restaurantsQueryOptions } from "@/utils/restaurants";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { useMemo } from "react";
 
@@ -20,7 +20,7 @@ function RouteComponent() {
   const {
     data: { restaurants },
   } = useSuspenseQuery(restaurantsQueryOptions(Route.useLoaderDeps()));
-  const order = restaurantsView?.$order ?? "inspection_date DESC"; // Change this line
+  const order = restaurantsView?.$order ?? "inspection_date DESC";
   const offset = restaurantsView?.$offset ?? 0;
 
   const sortedRestaurants = useMemo(() => {
@@ -56,9 +56,7 @@ function RouteComponent() {
 
   return (
     <div className="p-2 flex gap-2 flex-1 h-full">
-      <DataTable columns={columns} data={restaurants} />
-      <hr />
-      <Outlet />
+      <DataTable columns={columns} data={sortedRestaurants} />
     </div>
   );
 }
