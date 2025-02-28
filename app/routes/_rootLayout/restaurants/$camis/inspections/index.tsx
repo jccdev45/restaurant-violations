@@ -2,7 +2,7 @@ import { InspectionOverview } from "@/components/restaurants/inspection-overview
 import { restaurantQueryOptions } from "@/utils/restaurants";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/restaurants/$camis/inspections/")({
+export const Route = createFileRoute("/_rootLayout/restaurants/$camis/inspections/")({
   loader: async ({ context, params: { camis } }) => {
     const { restaurant } = await context.queryClient.ensureQueryData(
       restaurantQueryOptions(camis)

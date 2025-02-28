@@ -4,7 +4,7 @@ import { restaurantQueryOptions } from "@/utils/restaurants";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
-  "/restaurants/$camis/inspections/$inspectionId/"
+  "/_rootLayout/restaurants/$camis/inspections/$inspectionId/"
 )({
   loader: async ({ context, params: { camis, inspectionId } }) => {
     const { restaurant } = await context.queryClient.ensureQueryData(

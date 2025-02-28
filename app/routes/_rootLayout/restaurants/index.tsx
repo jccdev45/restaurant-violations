@@ -7,7 +7,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { useMemo } from "react";
 
-export const Route = createFileRoute("/restaurants/")({
+export const Route = createFileRoute("/_rootLayout/restaurants/")({
   loader: async ({ context, deps }) => {
     await context.queryClient.ensureQueryData(restaurantsQueryOptions(deps));
   },

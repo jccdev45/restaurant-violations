@@ -1,7 +1,7 @@
 import { SidebarInset } from "@/components/ui/sidebar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/restaurants")({
+export const Route = createFileRoute("/_rootLayout/restaurants")({
   component: RouteComponent,
 });
 

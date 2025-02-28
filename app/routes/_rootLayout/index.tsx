@@ -24,7 +24,7 @@ import {
   Utensils,
 } from "lucide-react";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_rootLayout/")({
   component: Home,
 });
 
@@ -260,7 +260,7 @@ function Home() {
         type="image"
         title="CLEANPLATE"
         subtitle="Search for and view the public inspection results of restaurants all across New York City."
-        subtext="SPOILER: You might end up reconsidering your favorite spots."
+        subtext="You might just end up reconsidering your favorite spots."
         ctaLink="/restaurants"
         ctaText="View the restaurants table"
         images={HERO_IMAGES}

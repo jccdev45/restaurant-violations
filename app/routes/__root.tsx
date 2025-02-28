@@ -1,21 +1,20 @@
 // app/routes/__root.tsx
 
-import { AppSidebar } from "@/components/app-sidebar";
-import {
-  DefaultCatchBoundary,
-} from "@/components/error/default-catch-boundary";
+import { DefaultCatchBoundary } from "@/components/error/default-catch-boundary";
 import { NotFound } from "@/components/not-found";
-import { ThemeProvider } from "@/components/theme-provider";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import appCss from "@/styles/app.css?url";
 import { seo } from "@/utils/seo";
 import type { QueryClient } from "@tanstack/react-query";
-// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
-  createRootRouteWithContext, HeadContent, Outlet, Scripts,
+  createRootRouteWithContext,
+  HeadContent,
+  Outlet,
+  Scripts,
 } from "@tanstack/react-router";
-// import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import type { ReactNode } from "react";
+
+// import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -71,17 +70,7 @@ export const Route = createRootRouteWithContext<{
 function RootComponent() {
   return (
     <RootDocument>
-      <ThemeProvider defaultTheme="dark" storageKey="tanstack-ui-theme">
-        <SidebarProvider>
-          <AppSidebar />
-          <div className="flex flex-col h-full container mx-auto">
-            <div className="flex items-center gap-2 py-2">
-              <SidebarTrigger size="lg" />
-            </div>
-            <Outlet />
-          </div>
-        </SidebarProvider>
-      </ThemeProvider>
+      <Outlet />
     </RootDocument>
   );
 }
@@ -94,10 +83,10 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       </head>
       <body className="h-svh">
         {children}
-        {/* <TanStackRouterDevtools initialIsOpen={false} position="bottom-right" />
-        <ReactQueryDevtools
+        {/* <TanStackRouterDevtools initialIsOpen={false} position="bottom-right" /> */}
+        {/* <ReactQueryDevtools
           initialIsOpen={false}
-          buttonPosition="bottom-left"
+          buttonPosition="bottom-right"
         /> */}
         <Scripts />
       </body>

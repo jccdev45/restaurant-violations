@@ -7,7 +7,7 @@ import { restaurantQueryOptions } from "@/utils/restaurants";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/restaurants/$camis/")({
+export const Route = createFileRoute("/_rootLayout/restaurants/$camis/")({
   loader: async ({ context, params: { camis } }) => {
     await context.queryClient.ensureQueryData(restaurantQueryOptions(camis));
   },
