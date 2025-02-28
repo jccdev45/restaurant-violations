@@ -55,7 +55,7 @@ function RouteComponent() {
   // const filteredRestaurants = useMemo(() => {}, [sortedRestaurants, order])
 
   return (
-    <div className="p-2 flex gap-2 flex-1 h-full">
+    <div className="container mx-auto">
       <DataTable columns={columns} data={sortedRestaurants} />
     </div>
   );

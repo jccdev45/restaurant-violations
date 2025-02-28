@@ -3,11 +3,7 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+  Card, CardContent, CardDescription, CardHeader, CardTitle,
 } from "@/components/ui/card";
 import { Hero } from "@/components/ui/hero";
 import { Typography } from "@/components/ui/typography";
@@ -15,13 +11,7 @@ import type { Restaurant, Violation } from "@/types/restaurant-types";
 import { HERO_IMAGES, RESTAURANT_DATA } from "@/utils/mock-data";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  AlertTriangle,
-  Building2,
-  Calendar,
-  MapPin,
-  Phone,
-  Shield,
-  Utensils,
+  AlertTriangle, Building2, Calendar, MapPin, Phone, Shield, Utensils,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_rootLayout/")({
@@ -255,7 +245,7 @@ function Footer() {
 
 function Home() {
   return (
-    <div className="container mx-auto">
+    <div className="flex-1 mx-auto container">
       <Hero
         type="image"
         title="CLEANPLATE"
@@ -265,16 +255,8 @@ function Home() {
         ctaText="View the restaurants table"
         images={HERO_IMAGES}
       />
-      <main className="px-4 py-6 md:py-12">
+      <div className="px-4 py-6 md:py-12">
         <section className="mx-auto max-w-4xl space-y-6">
-          {/* <div className="flex w-full max-w-sm items-center space-x-2 mx-auto">
-            <Input type="search" placeholder="Search restaurants..." />
-            <Button type="submit" size="icon">
-              <Search className="h-4 w-4" />
-              <span className="sr-only">Search</span>
-            </Button>
-          </div> */}
-
           <Alert>
             <AlertTitle>
               <Typography variant="h3">Featured Restaurants</Typography>
@@ -296,7 +278,7 @@ function Home() {
             <Resources />
           </section>
         </section>
-      </main>
+      </div>
 
       <Footer />
     </div>
