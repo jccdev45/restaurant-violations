@@ -3,6 +3,7 @@ import { Typography } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import type { HeroImage } from "@/types/hero-image";
 import { Link } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Img } from "react-image";
 
@@ -13,6 +14,7 @@ type HeroProps = {
   subtitle: string;
   ctaText: string;
   ctaLink: string;
+  subtext?: string;
   autoPlay?: boolean;
 };
 
@@ -21,6 +23,7 @@ export function Hero({
   images,
   title,
   subtitle,
+  subtext,
   ctaText,
   ctaLink,
   autoPlay = true,
@@ -91,7 +94,6 @@ export function Hero({
             "size-full object-cover object-bottom transition-opacity duration-1000",
             isTransitioning ? `opacity-0` : `opacity-100`
           )}
-          // style={{ opacity: isTransitioning ? 0 : 1 }}
         />
       );
     }
@@ -101,15 +103,24 @@ export function Hero({
     <section className="relative h-[400px] overflow-hidden md:rounded-lg">
       {renderMedia()}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="absolute inset-0 bg-black opacity-50 dark:opacity-70"></div>
-        <div className="space-y-4 text-center text-background dark:text-foreground w-full max-w-md lg:max-w-xl z-10">
+        <div className="absolute inset-0 bg-black opacity-30 dark:opacity-50"></div>
+        <div className="space-y-4 text-center text-background dark:text-foreground w-full max-w-md lg:max-w-xl text-balance z-10">
           <Typography variant="h1">{title}</Typography>
-          <Typography variant="large" className="text-balance">
-            {subtitle}
-          </Typography>
-          <div className="isolation-auto">
+          <Typography variant="h4">{subtitle}</Typography>
+          {subtext && (
+            <Typography
+              variant="small"
+              className="bg-destructive/20 p-2 rounded"
+            >
+              {subtext}
+            </Typography>
+          )}
+          <div className="isolation-auto mt-6">
             <Button variant="secondary" size="lg" asChild>
-              <Link to={ctaLink}>{ctaText}</Link>
+              <Link to={ctaLink}>
+                {ctaText}
+                <ArrowRight />
+              </Link>
             </Button>
           </div>
         </div>

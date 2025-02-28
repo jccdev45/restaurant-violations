@@ -2,13 +2,27 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { NavMain } from "@/components/nav-main";
 import { NavQuickAccess } from "@/components/nav-quick-access";
 import {
-  Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu,
-  SidebarMenuButton, SidebarMenuItem, SidebarRail,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
 } from "@/components/ui/sidebar";
 import { Link } from "@tanstack/react-router";
 import {
-  AlertTriangle, BarChart, BookOpen, ChefHat, Home, Map, Table, TrendingDown,
-  TrendingUp, Utensils,
+  AlertTriangle,
+  BarChart,
+  BookOpen,
+  ChefHat,
+  Home,
+  Map,
+  Table,
+  TrendingDown,
+  TrendingUp,
+  Utensils,
 } from "lucide-react";
 import * as React from "react";
 
@@ -19,7 +33,6 @@ const data = {
       title: "Home",
       url: "/",
       icon: Home,
-      isActive: true,
     },
     {
       title: "Restaurants",
