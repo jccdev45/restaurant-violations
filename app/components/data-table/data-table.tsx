@@ -1,28 +1,34 @@
-import {
-  DataTablePagination,
-} from "@/components/data-table/data-table-pagination";
+import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from "@/lib/utils";
 import {
-  type Column, type ColumnDef, type ColumnFiltersState, flexRender,
-  getCoreRowModel, getFacetedRowModel, getFacetedUniqueValues,
-  getFilteredRowModel, getPaginationRowModel, getSortedRowModel,
-  type SortingState, useReactTable, type VisibilityState,
+  type Column,
+  type ColumnDef,
+  type ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  type SortingState,
+  useReactTable,
+  type VisibilityState,
 } from "@tanstack/react-table";
 import { type CSSProperties, useState } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  totalCount: number;
-  pageSize?: number;
-  pageIndex?: number;
-  onPageChange: (newPageIndex: number) => void;
-  onPageSizeChange: (newPageSize: number) => void;
 }
 
 const getCommonPinningStyles = <TData,>(
@@ -52,11 +58,6 @@ const getCommonPinningStyles = <TData,>(
 export function DataTable<TData, TValue>({
   columns,
   data,
-  totalCount,
-  pageSize = DEFAULT_PAGE_SIZE,
-  pageIndex = DEFAULT_PAGE_INDEX,
-  onPageChange,
-  onPageSizeChange,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -78,12 +79,6 @@ export function DataTable<TData, TValue>({
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
-    initialState: {
-      pagination: {
-        pageIndex,
-        pageSize,
-      },
-    },
     state: {
       columnFilters,
       columnVisibility,
@@ -153,12 +148,7 @@ export function DataTable<TData, TValue>({
           </Table>
         </TooltipProvider>
       </div>
-      <DataTablePagination
-        table={table}
-        onPageSizeChange={onPageSizeChange}
-        onPageChange={onPageChange}
-        totalCount={totalCount}
-      />
+      <DataTablePagination table={table} />
     </div>
   );
 }

@@ -3,43 +3,6 @@ import type { Restaurant } from "@/types/restaurant-types";
 
 export const RESTAURANT_DATA: Restaurant[] = [
   {
-    camis: "40567856",
-    dba: "STARBUCKS",
-    boro: "Queens",
-    building: "6151",
-    street: "188 STREET",
-    zipcode: "11365",
-    phone: "7182640658",
-    cuisine_description: "Coffee/Tea",
-    latitude: "40.73937721415",
-    longitude: "-73.78575728482",
-    community_board: "408",
-    council_district: "23",
-    census_tract: "134700",
-    bin: "4444049",
-    bbl: "4071170004",
-    nta: "QN41",
-    inspections: [
-      {
-        inspectionId: "40567856-2024-12-12T00:00:00.000",
-        inspection_date: "2024-12-12T00:00:00.000",
-        action: "No violations were recorded at the time of this inspection.",
-        critical_flag: "Not Applicable",
-        score: 0,
-        grade: "A",
-        grade_date: "2024-12-12T00:00:00.000",
-        inspection_type: "Cycle Inspection / Re-inspection",
-        violations: [
-          {
-            violation_code: "",
-            violation_description: "",
-            critical_flag: "Not Applicable",
-          },
-        ],
-      },
-    ],
-  },
-  {
     camis: "40423571",
     dba: "ARTUSO PASTRY SHOP",
     boro: "Bronx",
@@ -66,6 +29,43 @@ export const RESTAURANT_DATA: Restaurant[] = [
         grade: "",
         grade_date: "",
         inspection_type: "Inter-Agency Task Force / Initial Inspection",
+        violations: [
+          {
+            violation_code: "",
+            violation_description: "",
+            critical_flag: "Not Applicable",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    camis: "40567856",
+    dba: "STARBUCKS",
+    boro: "Queens",
+    building: "6151",
+    street: "188 STREET",
+    zipcode: "11365",
+    phone: "7182640658",
+    cuisine_description: "Coffee/Tea",
+    latitude: "40.73937721415",
+    longitude: "-73.78575728482",
+    community_board: "408",
+    council_district: "23",
+    census_tract: "134700",
+    bin: "4444049",
+    bbl: "4071170004",
+    nta: "QN41",
+    inspections: [
+      {
+        inspectionId: "40567856-2024-12-12T00:00:00.000",
+        inspection_date: "2024-12-12T00:00:00.000",
+        action: "No violations were recorded at the time of this inspection.",
+        critical_flag: "Not Applicable",
+        score: 0,
+        grade: "A",
+        grade_date: "2024-12-12T00:00:00.000",
+        inspection_type: "Cycle Inspection / Re-inspection",
         violations: [
           {
             violation_code: "",

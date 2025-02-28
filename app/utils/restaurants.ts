@@ -10,10 +10,9 @@ import axios from "redaxios";
 
 const BASE_URL = "https://data.cityofnewyork.us/resource/43nn-pn8j.json";
 
-const DEFAULT_PARAMS: Partial<RestaurantSearchParams> = {
+const DEFAULT_PARAMS: Partial<RestaurantSearchParams["restaurantsView"]> = {
   $order: "inspection_date DESC", // Default $order as a string
-  $limit: 5000,
-  $offset: 0,
+  $limit: 500, // Default limit
 };
 
 function transformRestaurantData(data: any[]): Restaurant[] {
@@ -89,15 +88,17 @@ const fetchData = async <T>({
   params,
   camis,
 }: {
-  params?: RestaurantSearchParams;
+  params?: RestaurantSearchParams["restaurantsView"];
   camis?: string;
 }): Promise<T> => {
+  console.log("🚀 ~ params:", params);
+  console.log("🚀 ~ camis:", camis);
+
   //Merge default params with provided params, overwriting defaults if needed.
-  const mergedParams: Partial<RestaurantSearchParams> = {
+  const mergedParams: Partial<RestaurantSearchParams["restaurantsView"]> = {
     ...DEFAULT_PARAMS,
     ...params,
   };
-  console.log("🚀 ~ mergedParams:", mergedParams);
 
   try {
     const response = await axios.get<T>(BASE_URL, {
@@ -118,33 +119,25 @@ const fetchData = async <T>({
 };
 
 export const fetchRestaurants = createServerFn({ method: "GET" })
-  .validator((d: RestaurantSearchParams) => d)
+  .validator((d: RestaurantSearchParams["restaurantsView"]) => d)
   .handler(
     async ({ data: restaurantsView }): Promise<RestaurantListResponse> => {
-      const mergedParams = { ...DEFAULT_PARAMS, ...restaurantsView };
-      const { $limit, $offset, ...otherParams } = mergedParams; // Separate limit and offset
+      console.log("🚀 ~ .handler ~ params:", restaurantsView);
 
-      //Fetch data with limit and offset applied
-      const rawData = await fetchData<any[]>({
-        params: { ...otherParams, $limit, $offset },
+      const data = await fetchData<any[]>({
+        params: restaurantsView,
       });
-      //Transform data AFTER pagination
-      const transformedRestaurants = transformRestaurantData(rawData);
-      return {
-        restaurants: transformedRestaurants,
-        totalCount: rawData.length,
-      };
+
+      const restaurants = transformRestaurantData(data);
+
+      return { restaurants };
     }
   );
 
 export const restaurantsQueryOptions = (params: RestaurantSearchParams) =>
   queryOptions({
     queryKey: ["restaurants"],
-    queryFn: () => fetchRestaurants({ data: params }),
-    select: (data) => ({
-      restaurants: data.restaurants,
-      totalCount: data.totalCount,
-    }),
+    queryFn: () => fetchRestaurants({ data: params.restaurantsView }),
   });
 
 export const fetchRestaurant = createServerFn({ method: "GET" })
