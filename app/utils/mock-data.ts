@@ -3,43 +3,6 @@ import type { Restaurant } from "@/types/restaurant-types";
 
 export const RESTAURANT_DATA: Restaurant[] = [
   {
-    camis: "40423571",
-    dba: "ARTUSO PASTRY SHOP",
-    boro: "Bronx",
-    building: "670",
-    street: "EAST  187 STREET",
-    zipcode: "10458",
-    phone: "7183672515",
-    cuisine_description: "Bakery Products/Desserts",
-    latitude: "40.854310632862",
-    longitude: "-73.885040241969",
-    community_board: "206",
-    council_district: "15",
-    census_tract: "039100",
-    bin: "2012519",
-    bbl: "2030890031",
-    nta: "BX06",
-    inspections: [
-      {
-        inspectionId: "40423571-2024-09-08T00:00:00.000",
-        inspection_date: "2024-09-08T00:00:00.000",
-        action: "No violations were recorded at the time of this inspection.",
-        critical_flag: "Not Applicable",
-        score: 0,
-        grade: "",
-        grade_date: "",
-        inspection_type: "Inter-Agency Task Force / Initial Inspection",
-        violations: [
-          {
-            violation_code: "",
-            violation_description: "",
-            critical_flag: "Not Applicable",
-          },
-        ],
-      },
-    ],
-  },
-  {
     camis: "40567856",
     dba: "STARBUCKS",
     boro: "Queens",
@@ -66,6 +29,43 @@ export const RESTAURANT_DATA: Restaurant[] = [
         grade: "A",
         grade_date: "2024-12-12T00:00:00.000",
         inspection_type: "Cycle Inspection / Re-inspection",
+        violations: [
+          {
+            violation_code: "",
+            violation_description: "",
+            critical_flag: "Not Applicable",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    camis: "40423571",
+    dba: "ARTUSO PASTRY SHOP",
+    boro: "Bronx",
+    building: "670",
+    street: "EAST  187 STREET",
+    zipcode: "10458",
+    phone: "7183672515",
+    cuisine_description: "Bakery Products/Desserts",
+    latitude: "40.854310632862",
+    longitude: "-73.885040241969",
+    community_board: "206",
+    council_district: "15",
+    census_tract: "039100",
+    bin: "2012519",
+    bbl: "2030890031",
+    nta: "BX06",
+    inspections: [
+      {
+        inspectionId: "40423571-2024-09-08T00:00:00.000",
+        inspection_date: "2024-09-08T00:00:00.000",
+        action: "No violations were recorded at the time of this inspection.",
+        critical_flag: "Not Applicable",
+        score: 0,
+        grade: "",
+        grade_date: "",
+        inspection_type: "Inter-Agency Task Force / Initial Inspection",
         violations: [
           {
             violation_code: "",

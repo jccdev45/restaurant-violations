@@ -53,6 +53,7 @@ export interface Restaurant extends RestaurantBase {
 // API response for list of restaurants
 export interface RestaurantListResponse {
   restaurants: Restaurant[];
+  totalCount: number;
 }
 
 // API response for a single restaurant with all inspections

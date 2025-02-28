@@ -1,39 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
+  DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub,
+  DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
+  Tooltip, TooltipContent, TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { Restaurant } from "@/types/restaurant-types";
 import { Link } from "@tanstack/react-router";
 import {
-  type Column,
-  type ColumnDef,
-  createColumnHelper,
+  type Column, type ColumnDef, createColumnHelper,
 } from "@tanstack/react-table";
 import {
-  ArrowDown,
-  ArrowUp,
-  CheckCircle,
-  ChevronsUpDown,
-  EyeOff,
-  MinusCircle,
-  MoreHorizontal,
-  TriangleAlert,
+  ArrowDown, ArrowUp, CheckCircle, ChevronsUpDown, EyeOff, MinusCircle,
+  MoreHorizontal, TriangleAlert,
 } from "lucide-react";
 
 const columnHelper = createColumnHelper<Restaurant>();
@@ -273,8 +256,9 @@ export const columns: ColumnDef<Restaurant, any>[] = [
                 {desc.slice(0, 50)}...
               </span>
             </TooltipTrigger>
-            <TooltipContent>
-              <p>{desc}</p>
+            <TooltipContent className="text-balance max-w-sm text-center">
+              {desc}
+              {/* <p className="text-balance">{desc}</p> */}
             </TooltipContent>
           </Tooltip>
         ) : (

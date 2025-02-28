@@ -2,6 +2,9 @@ import type { RedaxiosError } from "@/types/axios-types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+export const DEFAULT_PAGE_INDEX = 0;
+export const DEFAULT_PAGE_SIZE = 10;
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -29,3 +32,24 @@ export function generateInspectionId(
 ): string {
   return `${camis}-${inspection_date}`;
 }
+
+export const cleanEmptyParams = <T extends Record<string, unknown>>(
+  search: T
+) => {
+  const newSearch = { ...search };
+  for (const key in newSearch) {
+    const value = newSearch[key];
+    // More robust check for empty values, including null and empty arrays/objects
+    if (
+      value === undefined ||
+      value === null ||
+      value === "" ||
+      (Array.isArray(value) && value.length === 0) ||
+      (typeof value === "object" && Object.keys(value).length === 0) ||
+      (typeof value === "number" && isNaN(value))
+    ) {
+      delete newSearch[key];
+    }
+  }
+  return newSearch;
+};
