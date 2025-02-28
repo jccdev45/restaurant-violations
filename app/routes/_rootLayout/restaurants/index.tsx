@@ -12,16 +12,20 @@ export const Route = createFileRoute("/_rootLayout/restaurants/")({
     await context.queryClient.ensureQueryData(restaurantsQueryOptions(deps));
   },
   validateSearch: zodValidator(restaurantSearchSchema),
+  // search: {
+  //   middlewares: [retainSearchParams(["restaurantsView"])],
+  // },
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { restaurantsView } = Route.useSearch();
+  const search = Route.useSearch();
+  console.log("🚀 ~ RouteComponent ~ search:", search);
   const {
     data: { restaurants },
   } = useSuspenseQuery(restaurantsQueryOptions(Route.useLoaderDeps()));
-  const order = restaurantsView?.$order ?? "inspection_date DESC";
-  const offset = restaurantsView?.$offset ?? 0;
+  const order = search?.$order ?? "inspection_date DESC";
+  const offset = search?.$offset ?? 0;
 
   const sortedRestaurants = useMemo(() => {
     if (!restaurants) return [];

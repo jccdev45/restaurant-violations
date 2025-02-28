@@ -1,7 +1,10 @@
 import { generateInspectionId, isRedaxiosError } from "@/lib/utils";
+import type { RestaurantSearchParams } from "@/schema/restaurantSchema";
 import type {
-  FullInspectionData, Restaurant, RestaurantListResponse,
-  RestaurantSearchParams, Violation,
+  FullInspectionData,
+  Restaurant,
+  RestaurantListResponse,
+  Violation,
 } from "@/types/restaurant-types";
 import { queryOptions } from "@tanstack/react-query";
 import { notFound } from "@tanstack/react-router";
@@ -10,9 +13,9 @@ import axios from "redaxios";
 
 const BASE_URL = "https://data.cityofnewyork.us/resource/43nn-pn8j.json";
 
-const DEFAULT_PARAMS: Partial<RestaurantSearchParams["restaurantsView"]> = {
+const DEFAULT_PARAMS: RestaurantSearchParams = {
   $order: "inspection_date DESC", // Default $order as a string
-  $limit: 500, // Default limit
+  $limit: 2500, // Default limit
 };
 
 function transformRestaurantData(data: any[]): Restaurant[] {
@@ -88,14 +91,11 @@ const fetchData = async <T>({
   params,
   camis,
 }: {
-  params?: RestaurantSearchParams["restaurantsView"];
+  params?: RestaurantSearchParams;
   camis?: string;
 }): Promise<T> => {
-  console.log("🚀 ~ params:", params);
-  console.log("🚀 ~ camis:", camis);
-
   //Merge default params with provided params, overwriting defaults if needed.
-  const mergedParams: Partial<RestaurantSearchParams["restaurantsView"]> = {
+  const mergedParams: RestaurantSearchParams = {
     ...DEFAULT_PARAMS,
     ...params,
   };
@@ -119,25 +119,22 @@ const fetchData = async <T>({
 };
 
 export const fetchRestaurants = createServerFn({ method: "GET" })
-  .validator((d: RestaurantSearchParams["restaurantsView"]) => d)
-  .handler(
-    async ({ data: restaurantsView }): Promise<RestaurantListResponse> => {
-      console.log("🚀 ~ .handler ~ params:", restaurantsView);
+  .validator((d: RestaurantSearchParams) => d)
+  .handler(async ({ data: params }): Promise<RestaurantListResponse> => {
+    console.log("🚀 ~ params:", params);
+    const data = await fetchData<any[]>({
+      params,
+    });
 
-      const data = await fetchData<any[]>({
-        params: restaurantsView,
-      });
+    const restaurants = transformRestaurantData(data);
 
-      const restaurants = transformRestaurantData(data);
-
-      return { restaurants };
-    }
-  );
+    return { restaurants };
+  });
 
 export const restaurantsQueryOptions = (params: RestaurantSearchParams) =>
   queryOptions({
-    queryKey: ["restaurants"],
-    queryFn: () => fetchRestaurants({ data: params.restaurantsView }),
+    queryKey: ["restaurants", params],
+    queryFn: () => fetchRestaurants({ data: params }),
   });
 
 export const fetchRestaurant = createServerFn({ method: "GET" })

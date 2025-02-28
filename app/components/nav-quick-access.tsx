@@ -6,6 +6,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Link } from "@tanstack/react-router";
 import { type LucideIcon, MoreHorizontal } from "lucide-react";
 
 export function NavQuickAccess({
@@ -15,6 +16,7 @@ export function NavQuickAccess({
     name: string;
     url: string;
     icon: LucideIcon;
+    search: Record<string, string | undefined>;
   }[];
 }) {
   const { isMobile } = useSidebar();
@@ -26,10 +28,10 @@ export function NavQuickAccess({
         {quickAccess.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
+              <Link to={item.url} search={item.search ?? {}}>
                 <item.icon />
                 <span>{item.name}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
             {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>

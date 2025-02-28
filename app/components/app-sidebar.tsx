@@ -43,6 +43,10 @@ const data = {
           title: "Table",
           url: "/restaurants",
           icon: Table,
+          // search: {
+          //   $order: "inspection_date DESC",
+          //   $limit: "2500"
+          // }
         },
         {
           title: "Map",
@@ -58,21 +62,29 @@ const data = {
     },
   ],
   quickAccess: [
-    // Renamed "projects" to "quickAccess"
     {
       name: "Critical Violations",
-      url: "/restaurants?critical_flag=Critical",
+      url: "/restaurants",
       icon: AlertTriangle,
+      search: {
+        $critical_flag: "Critical",
+      },
     },
     {
       name: "Worst Performers",
-      url: "/restaurants?$where=score%20%3E%2027", // URL-encoded >
+      url: "/restaurants",
       icon: TrendingDown,
+      search: {
+        $where: "score > 27",
+      },
     },
     {
       name: "Best Performers",
-      url: "/restaurants?$where=score%20%3C%2014", // URL-encoded <
+      url: "/restaurants",
       icon: TrendingUp,
+      search: {
+        $where: "score < 14",
+      },
     },
   ],
 };
