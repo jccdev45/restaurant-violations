@@ -120,16 +120,26 @@ export const columns: ColumnDef<Restaurant, any>[] = [
       return name.length > 20 ? (
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="cursor-help dotted whitespace-nowrap">
-              {`${name.slice(0, 20)}...`}
-            </span>
+            <Link
+              to="/restaurants/$camis"
+              params={{ camis: info.row.original.camis }}
+            >
+              <span className="dotted whitespace-nowrap">
+                {`${name.slice(0, 20)}...`}
+              </span>
+            </Link>
           </TooltipTrigger>
           <TooltipContent>
             <p>{name}</p>
           </TooltipContent>
         </Tooltip>
       ) : (
-        name
+        <Link
+          to="/restaurants/$camis"
+          params={{ camis: info.row.original.camis }}
+        >
+          <span className="dotted whitespace-nowrap">{name}</span>
+        </Link>
       );
     },
     enableSorting: false,
@@ -273,8 +283,8 @@ export const columns: ColumnDef<Restaurant, any>[] = [
                 {desc.slice(0, 50)}...
               </span>
             </TooltipTrigger>
-            <TooltipContent>
-              <p>{desc}</p>
+            <TooltipContent className="max-w-sm text-balance text-center">
+              {desc}
             </TooltipContent>
           </Tooltip>
         ) : (
