@@ -1,5 +1,9 @@
+// utils/restaurants.ts
 import { generateInspectionId, isRedaxiosError } from "@/lib/utils";
-import type { RestaurantSearchParams } from "@/schema/restaurantSchema";
+import {
+  type RestaurantSearchParams,
+  restaurantSearchSchema,
+} from "@/schema/restaurantSchema";
 import type {
   FullInspectionData,
   Restaurant,
@@ -12,11 +16,6 @@ import { createServerFn } from "@tanstack/react-start";
 import axios from "redaxios";
 
 const BASE_URL = "https://data.cityofnewyork.us/resource/43nn-pn8j.json";
-
-const DEFAULT_PARAMS: RestaurantSearchParams = {
-  $order: "inspection_date DESC", // Default $order as a string
-  $limit: 2500, // Default limit
-};
 
 function transformRestaurantData(data: any[]): Restaurant[] {
   const restaurantsMap = data.reduce<Record<string, Restaurant>>(
@@ -50,16 +49,13 @@ function transformRestaurantData(data: any[]): Restaurant[] {
           critical_flag: item.critical_flag,
         };
 
-        // Find an existing inspection with the same date
         const existingInspection = acc[item.camis].inspections.find(
           (insp) => insp.inspection_date === item.inspection_date
         );
 
         if (existingInspection) {
-          // If an inspection with the same date exists, add the violation to it
           existingInspection.violations.push(violation);
         } else {
-          // Otherwise, create a new inspection
           const inspection: FullInspectionData = {
             inspectionId: generateInspectionId(
               item.camis,
@@ -74,7 +70,6 @@ function transformRestaurantData(data: any[]): Restaurant[] {
             inspection_type: item.inspection_type,
             violations: [violation],
           };
-
           acc[item.camis].inspections.push(inspection);
         }
       }
@@ -87,26 +82,20 @@ function transformRestaurantData(data: any[]): Restaurant[] {
   return Object.values(restaurantsMap);
 }
 
-const fetchData = async <T>({
+async function fetchData<T>({
   params,
   camis,
 }: {
   params?: RestaurantSearchParams;
   camis?: string;
-}): Promise<T> => {
-  //Merge default params with provided params, overwriting defaults if needed.
-  const mergedParams: RestaurantSearchParams = {
-    ...DEFAULT_PARAMS,
-    ...params,
-  };
-
+}): Promise<T> {
   try {
     const response = await axios.get<T>(BASE_URL, {
       headers: {
         Accept: "application/json",
         "X-App-Token": process.env.RESTAURANT_API_APP_TOKEN!,
       },
-      params: camis ? { camis } : mergedParams,
+      params: camis ? { camis } : params,
     });
     return response.data;
   } catch (error) {
@@ -116,12 +105,11 @@ const fetchData = async <T>({
     }
     throw error;
   }
-};
+}
 
 export const fetchRestaurants = createServerFn({ method: "GET" })
-  .validator((d: RestaurantSearchParams) => d)
+  .validator(restaurantSearchSchema)
   .handler(async ({ data: params }): Promise<RestaurantListResponse> => {
-    console.log("🚀 ~ params:", params);
     const data = await fetchData<any[]>({
       params,
     });
@@ -141,13 +129,8 @@ export const fetchRestaurant = createServerFn({ method: "GET" })
   .validator((d: string) => d)
   .handler(async ({ data }) => {
     const res = await fetchData<any[]>({ camis: data });
-
-    if (res.length === 0) {
-      throw notFound();
-    }
-
+    if (res.length === 0) throw notFound();
     const [restaurant] = transformRestaurantData(res);
-
     return { restaurant };
   });
 
